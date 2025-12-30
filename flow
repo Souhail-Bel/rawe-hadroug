@@ -1,0 +1,6 @@
+#!/bin/bash
+
+
+gcc -o textEditor main.c -g
+./textEditor
+
