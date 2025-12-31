@@ -1,6 +1,7 @@
 #!/bin/bash
 
-
-gcc -o textEditor main.c -g
+cd ./src/
+gcc -o ../textEditor ./*.c -g
+cd ../
 ./textEditor
 

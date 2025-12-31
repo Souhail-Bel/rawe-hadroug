@@ -1,5 +1,8 @@
 #ifndef UTILIS
 #define UTILIS
+
+/// Includes ///
+
 #include <termios.h>
 #include <ctype.h>
 #include <errno.h>
@@ -7,6 +10,26 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+#include <string.h>
+
+/// structures ///
+struct editorConfig {
+    int cx,cy;
+    int windowsLength;
+    int windowsWidth;
+    struct termios original_term;
+};
+struct string{
+    char* b;
+    int len;
+};
+enum editorKey{
+    LEFT_ARROW, 
+    RIGHT_ARROW,
+    UP_ARROW,
+    BOTTOM_ARROW
+};
+extern struct editorConfig e;
 
 /// Terminal ///
 void handleKeys();
@@ -14,10 +37,17 @@ void enableRawMode();
 void disableRawMode();
 void die(const char* s);
 int getWindowSize(int* rows , int* cols);
+void initEditorConfig();
+
 /// Output ///
 void refreshScreen();
-void drawRows();
+void drawRows(struct string *ab);
+
 /// Input ///
 char readKey();
 
+/// buffer append ///
+struct string initString();
+void stringAppend(struct string *ab , const char* c , int len);
+void stringFree(struct string *ab);
 #endif
