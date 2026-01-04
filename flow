@@ -3,5 +3,5 @@
 cd ./src/
 gcc -o ../textEditor ./*.c -g
 cd ../
-./textEditor
+./textEditor "$1" 
 

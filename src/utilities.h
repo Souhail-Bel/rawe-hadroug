@@ -1,6 +1,8 @@
 #ifndef UTILIS
 #define UTILIS
 
+
+
 /// Includes ///
 
 #include <termios.h>
@@ -11,17 +13,22 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <string.h>
+#include <sys/types.h>
+#include <stddef.h>
 
 /// structures ///
+
+struct string{
+    char* b;
+    int len;
+};
 struct editorConfig {
     int cx,cy;
     int windowsLength;
     int windowsWidth;
     struct termios original_term;
-};
-struct string{
-    char* b;
-    int len;
+    struct string *rowBuff;
+    int rowsNum;
 };
 enum editorKey{
     LEFT_ARROW, 
@@ -45,9 +52,12 @@ void drawRows(struct string *ab);
 
 /// Input ///
 char readKey();
+void readFile(char* file);
 
 /// buffer append ///
-struct string initString();
+void initString(struct string *ab);
 void stringAppend(struct string *ab , const char* c , int len);
 void stringFree(struct string *ab);
+
+
 #endif

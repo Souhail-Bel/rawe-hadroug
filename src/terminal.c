@@ -18,11 +18,10 @@ void initEditorConfig(){
     e.cy=0;
     if (getWindowSize(&e.windowsLength, &e.windowsWidth) == -1)
         die("getWindowSize");
+    e.rowsNum=0;
+    e.rowBuff = NULL;
 }
-void insertChar(char c){
 
-
-}
 void handleKeys(){
     char c = readKey();
     
@@ -74,7 +73,7 @@ void handleKeys(){
                                 e.cx = e.windowsLength -1;
                     }
             }
-        }    
+        }
     }
 }
 

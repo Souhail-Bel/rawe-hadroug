@@ -9,3 +9,31 @@ char readKey(){
     }
     return c;
 }
+
+void readFile(char* file){
+    FILE* File = fopen(file,"r");
+    
+    if (file == NULL){
+        die("fopen");
+    }
+
+
+    char* line = NULL;
+    size_t len = 0 ;
+
+    ssize_t linesize;
+
+    while((linesize = getline(&line,&len,File)) != -1){
+        while(linesize > 0 && (line[linesize-1] == '\r' || line[linesize-1] == '\n'))
+            linesize--;
+
+        e.rowBuff = (struct string*)realloc(e.rowBuff, sizeof(struct string) * (e.rowsNum+1));
+        initString(e.rowBuff + e.rowsNum);
+        stringAppend(e.rowBuff + e.rowsNum, line, linesize);
+            
+        
+        e.rowsNum++;
+    }
+    free(line);
+    fclose(File);
+}
