@@ -21,8 +21,10 @@ void refreshScreen(){
 
 void drawRows(struct string *ab){
     for (int y =0;y<e.windowsLength;y++){
-        if (y>=e.rowsNum){
-            if (y == 0) {
+        int i= y+e.rowoff;
+        
+        if (i>=e.rowsNum){
+            if (i== 0) {
                 char welcome[80];
                 
                 int welcomelen = snprintf(welcome, sizeof(welcome),
@@ -37,8 +39,10 @@ void drawRows(struct string *ab){
             }
         }
         else {
-            if ((e.rowBuff+y)->len > e.windowsWidth) (e.rowBuff+y)->len = e.windowsWidth;
-            stringAppend(ab, (e.rowBuff+y)->b  , (e.rowBuff+y)->len);
+            int len = (e.rowBuff+i)->len - e.coloff;
+            if (len < 0) len =0;
+            if (len > e.windowsWidth) len = e.windowsWidth;
+            stringAppend(ab, (e.rowBuff+i)->b+e.coloff  , len);
         }
         if (y<e.windowsLength -1)
             stringAppend(ab ,"\r\n" ,2);

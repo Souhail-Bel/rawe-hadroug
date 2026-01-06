@@ -26,7 +26,12 @@ struct editorConfig {
     int cx,cy;
     int windowsLength;
     int windowsWidth;
+    
+    int rowoff;
+    int coloff;
+
     struct termios original_term;
+    
     struct string *rowBuff;
     int rowsNum;
 };

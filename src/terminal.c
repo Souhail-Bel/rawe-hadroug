@@ -16,6 +16,8 @@ int getWindowSize(int *rows, int *cols){
 void initEditorConfig(){
     e.cx=0;
     e.cy=0;
+    e.rowoff=0;
+    e.coloff=0;
     if (getWindowSize(&e.windowsLength, &e.windowsWidth) == -1)
         die("getWindowSize");
     e.rowsNum=0;
@@ -53,15 +55,19 @@ void handleKeys(){
                     switch (seq[1]){
                         case 'A':
                             if (e.cy) e.cy--;
+                            else if(e.rowoff) e.rowoff--;
                             break;
                         case 'B':
                             if(e.cy != e.windowsLength -1) e.cy++;
+                            else e.rowoff++;
                             break;
                         case 'C':
                             if(e.cx != e.windowsWidth -1) e.cx++;
+                            else e.coloff++;
                             break;
                         case 'D':
                             if (e.cx) e.cx--;
+                            else if (e.coloff) e.coloff--;
                             break;
                         case '5':
                             if(read(STDIN_FILENO,&seq[2],1) == -1){}
