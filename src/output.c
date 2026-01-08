@@ -26,12 +26,19 @@ void drawRows(struct string *ab){
         //snprintf(number, sizeof(number), "\e[38;5;238m%02d│ \e[0m",i);
         //stringAppend(ab,number,strlen(number));
         if (i>=e.rowsNum){
-            if (i== 0) {
+            if (e.rowBuff == NULL && i == e.windowsLength/3 ) {
                 char welcome[80];
-                
+                 
                 int welcomelen = snprintf(welcome, sizeof(welcome),
                         "Welcome to my text editor !");
-               if (welcomelen > e.windowsLength) welcomelen = e.windowsLength;
+                if (welcomelen > e.windowsLength) welcomelen = e.windowsLength;
+                int padding = (e.windowsWidth-welcomelen)/2;
+                stringAppend(ab, "~" , 1);
+                if (padding)padding --;
+                while(padding){
+                    stringAppend(ab, " " , 1);
+                    padding--;
+                }
                 
                 stringAppend(ab, welcome, welcomelen);
                 
