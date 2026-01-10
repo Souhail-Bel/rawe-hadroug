@@ -66,5 +66,7 @@ void initString(struct string *ab);
 void stringAppend(struct string *ab , const char* c , int len);
 void stringFree(struct string *ab);
 
+/// editing ////
+void insertChar(char c);
 
 #endif

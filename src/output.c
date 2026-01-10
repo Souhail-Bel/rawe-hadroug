@@ -33,7 +33,7 @@ void drawStatusLine(struct string *ab){
     char percent[30];
     int len_percent;
     
-    if (e.cy == 0 )
+    if (e.cy+e.rowoff == 0 )
         len_percent = snprintf(percent , sizeof(percent),"TOP");
     else if (e.cy + e.rowoff >= e.rowsNum -1)
         len_percent = snprintf(percent , sizeof(percent),"BOT");

@@ -1,4 +1,5 @@
 #include "utilities.h"
+#include <ctype.h>
 
 #define CTRL_KEY(k) ((k)-'a'+1)
 int getWindowSize(int *rows, int *cols){
@@ -103,6 +104,9 @@ void handleKeys(){
                     }
             }
         }
+        default :
+            if (!iscntrl(c))
+                insertChar(c);
     }
 }
 
