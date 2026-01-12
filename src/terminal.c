@@ -122,12 +122,24 @@ void die(const char* s){
     perror(s);
     exit(1);
 }
+void exiting(){
+    if (e.rowBuff != NULL){
+        for (int i = 0 ; i<e.rowsNum ; i++){
+            stringFree(&e.rowBuff[i]); 
+        }
+        free(e.rowBuff);
+    }
+    if (e.filename != NULL)
+        free(e.filename);
+    disableRawMode();
+}
+
 void disableRawMode(){
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH,&e.original_term) == -1) die("tcsetattr");
 }
 void enableRawMode(){
     if (tcgetattr(STDIN_FILENO, &e.original_term) == -1) die("tcgetattr");
-    atexit(disableRawMode);
+
     struct termios raw = e.original_term;
     raw.c_iflag &= ~(IXON | ICRNL | BRKINT | INPCK | ISTRIP);
     raw.c_lflag &= ~(ECHO | ICANON | ISIG | IEXTEN );
