@@ -2,9 +2,16 @@
 
 
 void insertChar(char c){
+    if (e.cy+e.rowoff >= e.rowsNum ){ 
+        e.rowBuff = (struct string*)realloc(e.rowBuff , sizeof(struct string) * (e.cy+e.rowoff + 1));
+        for (int i = e.rowsNum ; i<e.cy+e.rowoff+1 ;i++)
+            initString(&e.rowBuff[i]);
+        e.rowsNum = e.cy+e.rowoff+1;
+    }
+
     struct string* current_row = e.rowBuff+e.cy+e.rowoff;
     int current_col = e.cx;
-     
+    
     if(current_col < current_row ->len){
         current_row->b = realloc(current_row->b , current_row->len + 2);
         memmove(current_row->b+current_col+1 ,current_row->b+current_col ,current_row->len-current_col);
@@ -19,6 +26,7 @@ void insertChar(char c){
         memcpy(buf+i,&c,1);
         stringAppend(current_row,buf,strlen(buf));
     }
+
     e.modification_num++;
 }
 
@@ -34,6 +42,12 @@ int removeChar(){
     return 0;
 }
 
+//void insertNewLine(){
+    //e.rowBuff = (struct string*)realloc(e.rowBuff , sizeof(struct string) * (e.rowsNum+1) );
+    //memmove(e.rowBuff+e.cy+e.rowoff+2,e.rowBuff+e.cy+e.rowoff+1,e.rowsNum-1-e.cy-e.rowoff);
+    //stringAppend(e.rowBuff+e.cy+e.rowoff+1,e.rowBuff[e.cy+e.rowoff].b+e.cx,e.rowBuff[e.cy+e.rowoff].len-e.cx);
+//
+//}
 
 void saveToDisk (){
     FILE* file = fopen(e.filePath,"w");

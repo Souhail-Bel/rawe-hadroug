@@ -26,7 +26,8 @@ void drawStatusLine(struct string *ab){
     const char* reset = "\e[0m";
     
     char statusLine[100];
-    int len = snprintf(statusLine,sizeof(statusLine),"%.20s - %d lines %s",
+    int len = snprintf(statusLine,sizeof(statusLine),
+            (e.rowsNum == 0 || e.rowsNum == 1) ? "%.20s - %d line %s" : "%.20s - %d lines %s",
             e.filename ? e.filename : "[No Name]",
             e.rowsNum ,
             e.modification_num ? "(modified)" : "" 

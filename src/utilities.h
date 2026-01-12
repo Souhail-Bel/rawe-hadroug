@@ -73,5 +73,5 @@ void stringFree(struct string *ab);
 void insertChar(char c);
 int removeChar();
 void saveToDisk();
-
+void insertNewLine();
 #endif
