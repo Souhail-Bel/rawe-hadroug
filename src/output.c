@@ -26,9 +26,10 @@ void drawStatusLine(struct string *ab){
     const char* reset = "\e[0m";
     
     char statusLine[100];
-    int len = snprintf(statusLine,sizeof(statusLine),"%.20s - %d lines",
+    int len = snprintf(statusLine,sizeof(statusLine),"%.20s - %d lines %s",
             e.filename ? e.filename : "[No Name]",
-            e.rowsNum 
+            e.rowsNum ,
+            e.modification_num ? "(modified)" : "" 
             );
     char percent[30];
     int len_percent;
@@ -38,10 +39,10 @@ void drawStatusLine(struct string *ab){
     else if (e.cy + e.rowoff >= e.rowsNum -1)
         len_percent = snprintf(percent , sizeof(percent),"BOT");
     else
-        len_percent = snprintf(percent , sizeof(percent),"%d",(e.cy+e.rowoff)*100/e.rowsNum);
+        len_percent = snprintf(percent , sizeof(percent),"%d%%",(e.cy+e.rowoff)*100/e.rowsNum);
 
     char rstatus[80];
-    int rlen = snprintf(rstatus, sizeof(rstatus),"%s%%  %d:%d",percent,e.cy+1,e.cx+1);
+    int rlen = snprintf(rstatus, sizeof(rstatus),"%s  %d:%d",percent,e.cy+1,e.cx+1);
     
     stringAppend(ab,color,strlen(color));
 

@@ -33,6 +33,9 @@ struct editorConfig {
     struct termios original_term;
     
     char* filename;
+    char* filePath;
+    
+    int modification_num;
 
     struct string *rowBuff;
     int rowsNum;
@@ -68,5 +71,7 @@ void stringFree(struct string *ab);
 
 /// editing ////
 void insertChar(char c);
+int removeChar();
+void saveToDisk();
 
 #endif

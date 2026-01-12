@@ -1,5 +1,4 @@
 #include "utilities.h"
-#include <ctype.h>
 
 #define CTRL_KEY(k) ((k)-'a'+1)
 int getWindowSize(int *rows, int *cols){
@@ -13,7 +12,6 @@ int getWindowSize(int *rows, int *cols){
         return 0;
     }
 }
-
 void initEditorConfig(){
     e.cx=0;
     e.cy=0;
@@ -24,9 +22,10 @@ void initEditorConfig(){
     e.windowsLength -=2;
     e.rowsNum=0;
     e.rowBuff = NULL;
-    e.filename = NULL;
-}
 
+    e.filename = NULL;
+    e.filePath = NULL;
+}
 void handleKeys(){
     char c = readKey();
     
@@ -43,7 +42,14 @@ void handleKeys(){
         case '0':
             e.cx= 0;
             break;
-
+        case CTRL_KEY('s'):
+            saveToDisk();
+            break;
+        case 127:
+            if (!removeChar()) break;
+            if(e.cx)e.cx--;
+            else e.coloff--;
+            break;
         case 27 :{
             char seq[3] ;
             if(read(STDIN_FILENO,&seq[0],1) == -1){}
@@ -56,7 +62,6 @@ void handleKeys(){
                                 e.cx =  e.rowBuff[e.cy-1+e.rowoff].len-1 >= 0 ? 
                                         e.rowBuff[e.cy-1+e.rowoff].len-1 : 
                                         0 ;
-
                             else e.cx = 0;
                             if (e.cy) e.cy--; 
                             else if(e.rowoff) e.rowoff--;
@@ -72,7 +77,7 @@ void handleKeys(){
                             else e.rowoff++;
                             break;
                         case 'C':
-                            if(e.cy+e.rowoff<e.rowsNum  && e.cx == e.rowBuff[e.cy+e.rowoff].len -1) {
+                            if(e.cy+e.rowoff<e.rowsNum  && e.cx == e.rowBuff[e.cy+e.rowoff].len) {
                                 if (e.cy != e.windowsLength -1) e.cy++;
                                 else e.rowoff++;
                                 e.cx=0;
@@ -87,9 +92,7 @@ void handleKeys(){
                                 else if(e.cy+e.rowoff < e.rowsNum && e.cy+e.rowoff != 0){
                                         if (e.cy) e.cy--;
                                         else e.rowoff--;
-                                        e.cx =  e.rowBuff[e.cy+e.rowoff].len-1 >= 0 ? 
-                                                e.rowBuff[e.cy+e.rowoff].len-1 : 
-                                                0 ;
+                                        e.cx =  e.rowBuff[e.cy+e.rowoff].len; 
                                 }
                             }
                             break;
@@ -105,27 +108,26 @@ void handleKeys(){
             }
         }
         default :
-            if (!iscntrl(c))
+            if (!iscntrl(c)){
                 insertChar(c);
+                if (e.cx != e.windowsWidth-1) e.cx++;
+                else e.coloff++;
+            }
+
     }
 }
-
 void die(const char* s){
     write(STDOUT_FILENO ,"\x1b[2J" ,4);
     write(STDOUT_FILENO , "\x1b[H" ,3);
-
     perror(s);
     exit(1);
 }
-
 void disableRawMode(){
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH,&e.original_term) == -1) die("tcsetattr");
 }
-
 void enableRawMode(){
     if (tcgetattr(STDIN_FILENO, &e.original_term) == -1) die("tcgetattr");
     atexit(disableRawMode);
-
     struct termios raw = e.original_term;
     raw.c_iflag &= ~(IXON | ICRNL | BRKINT | INPCK | ISTRIP);
     raw.c_lflag &= ~(ECHO | ICANON | ISIG | IEXTEN );

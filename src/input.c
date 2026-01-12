@@ -12,12 +12,12 @@ char readKey(){
 
 void readFile(char* file){
     FILE* File = fopen(file,"r");
-    
-    if (file == NULL){
+    if (File == NULL){
         die("fopen");
     }
     
-    
+    e.filePath = file;  
+    e.modification_num = 0; 
     int i = strlen(file);
     while(i >= 0 && file[i] != '/') i--;
     if (file[i] == '/') i++;
