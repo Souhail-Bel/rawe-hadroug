@@ -47,20 +47,19 @@ int removeChar(){
         e.modification_num++;
         return 1;
     }
-    else if (current_col == 0 && e.cy+e.rowoff < e.rowsNum ){
+    else if (current_col == 0 && e.cy+e.rowoff < e.rowsNum && e.cy+e.rowoff != 0){
 
-        if (e.cy+e.rowoff != 0){
             if(current_row->len != 0) stringAppend(current_row-1 ,current_row->b, current_row->len);
 
             if(e.cy+e.rowoff < e.rowsNum-1) {
+                free(current_row->b);
                 memmove(current_row,
                         current_row+1,
                         sizeof(struct string)*(e.rowsNum - (e.cy+e.rowoff+1) )
                 );
-            }
+            
         }
         
-        free(e.rowBuff[e.rowsNum-1].b);
         e.rowsNum--;
 
         e.modification_num++;
