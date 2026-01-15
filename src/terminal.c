@@ -140,6 +140,8 @@ void exiting(){
         free(e.filename);
     if (e.filePath != NULL)
         free(e.filePath);
+    if (e.message.b != NULL)
+        stringFree(&e.message);
     disableRawMode();
 }
 
