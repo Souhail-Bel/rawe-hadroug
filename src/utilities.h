@@ -58,7 +58,8 @@ enum editorKey{
     ENTER = 13,
     QUIT = CTRL_KEY('q'),
     SAVE = CTRL_KEY('s'),
-    ESCAPE = 27
+    ESCAPE = 27,
+    TAB = 9 
 };
 extern struct editorConfig e;
 
@@ -105,4 +106,5 @@ void backspace();
 void enter();
 void character(char c);
 void dollarSign();
+void tab();
 #endif

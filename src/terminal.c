@@ -59,6 +59,9 @@ void handleKeys(){
             e.cx= 0;
             e.coloff=0;
             break;
+        case TAB :
+            tab();
+            break;
         case SAVE:{
             if (e.filePath == NULL){
                 struct string newFile = editorPrompt("save as ");

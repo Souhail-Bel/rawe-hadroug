@@ -68,6 +68,13 @@ void character(char c){
         else e.coloff++;
     }
 }
+void tab(){
+    for (int i =0 ;i<4;i++){
+        insertChar(' ');
+        if (e.cx != e.windowsWidth-1) e.cx++;
+        else e.coloff++;
+    }
+}
 void dollarSign(){
     int len= e.rowBuff[e.cy+e.rowoff].len ;
     if(len > e.windowsWidth) {
