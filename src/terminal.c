@@ -93,9 +93,9 @@ void handleKeys(){
             break;
         
         case ESCAPE :{
-            char seq[3] ;
-            if(read(STDIN_FILENO,&seq[0],1) == -1){}
-            if(read(STDIN_FILENO,&seq[1],1) == -1){}
+            char seq[5] ;
+            if(read(STDIN_FILENO,&seq[0],1) == -1){break;}
+            if(read(STDIN_FILENO,&seq[1],1) == -1){break;}
             switch(seq[0]){
                 case '[':
                     switch (seq[1]){
@@ -111,14 +111,26 @@ void handleKeys(){
                         case LEFT_ARROW:
                             leftArrow();     
                             break;
-                        case '5':
-                            if(read(STDIN_FILENO,&seq[2],1) == -1){}
-                            if (seq[2] == '~')
-                                e.cx=0;
-                        case '6':
-                            if(read(STDIN_FILENO,&seq[2],1) == -1){}
-                            if (seq[2] == '~')
-                                e.cx = e.windowsLength -1;
+                        case '1':
+                            if(read(STDIN_FILENO,&seq[2],1) == -1){break;}
+                            if(read(STDIN_FILENO,&seq[3],1) == -1){break;}
+                            if(read(STDIN_FILENO,&seq[4],1) == -1){break;}
+                            if (seq[2] == ';' && seq[3] == '5'){
+                                switch (seq[4]){
+                                    case LEFT_ARROW :
+                                        gotoPrevWord();
+                                        break;
+                                    case RIGHT_ARROW :
+                                        gotoNextWord();
+                                        break;
+                                    case UP_ARROW :
+                                        break;
+                                    case DOWN_ARROW :
+                                        break;
+
+                                }
+                            }
+                            break;
                     }
             }
         }

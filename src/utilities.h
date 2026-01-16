@@ -59,7 +59,7 @@ enum editorKey{
     QUIT = CTRL_KEY('q'),
     SAVE = CTRL_KEY('s'),
     ESCAPE = 27,
-    TAB = 9 
+    TAB = 9
 };
 extern struct editorConfig e;
 
@@ -107,4 +107,6 @@ void enter();
 void character(char c);
 void dollarSign();
 void tab();
+void gotoPrevWord();
+void gotoNextWord();
 #endif

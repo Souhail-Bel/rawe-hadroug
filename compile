@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd ./src/
+gcc -o ../textEditor ./*.c -g
+cd ../ 

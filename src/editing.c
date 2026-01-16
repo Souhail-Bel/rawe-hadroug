@@ -50,14 +50,12 @@ int removeChar(){
     else if (current_col == 0 && e.cy+e.rowoff < e.rowsNum && e.cy+e.rowoff != 0){
 
             if(current_row->len != 0) stringAppend(current_row-1 ,current_row->b, current_row->len);
-
             if(e.cy+e.rowoff < e.rowsNum-1) {
                 free(current_row->b);
                 memmove(current_row,
                         current_row+1,
                         sizeof(struct string)*(e.rowsNum - (e.cy+e.rowoff+1) )
                 );
-            
         }
         
         e.rowsNum--;
