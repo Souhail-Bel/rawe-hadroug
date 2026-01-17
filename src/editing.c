@@ -59,9 +59,9 @@ int removeChar(){
                 );
             }
         }
-        if (current_row->len == 0)
-            e.rowsNum--;
+        else if (e.rowsNum > 1 || current_row->len) return 0;
 
+        e.rowsNum--;
         e.modification_num++;
         return 1;
     }
