@@ -52,13 +52,7 @@ void handleKeys(){
             write(STDOUT_FILENO , "\x1b[H" ,3);
             
             exit(0);
-        case DOLLAR_SIGN:
-            dollarSign(); 
-            break;
-        case ZERO:
-            e.cx= 0;
-            e.coloff=0;
-            break;
+        
         case TAB :
             tab();
             break;
@@ -132,6 +126,14 @@ void handleKeys(){
                             }
                             break;
                     }
+                    break;
+                case DOLLAR_SIGN:
+                    dollarSign();
+                    break;
+                case ZERO:
+                    e.cx = 0;
+                    e.coloff = 0;
+                    break;
             }
         }
         default :

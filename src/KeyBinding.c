@@ -98,7 +98,7 @@ void dollarSign(){
     if(len > e.windowsWidth) {
         e.coloff = len - e.windowsLength;
     }
-    e.cx= (len) ? len-1 -e.coloff : 0 ;
+    e.cx= len ;
 }
 
 
