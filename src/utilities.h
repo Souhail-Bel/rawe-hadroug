@@ -81,6 +81,7 @@ void drawStatusLine(struct string *ab);
 void drawMessage(struct string *ab , struct string message);
 void writeMessage(struct string *destination , char* message , int len);
 void freeMessage();
+void drawEditorName(struct string *ab);
 /// Input ///
 char readKey(int* readStatus);
 void pathToFileName(char* path);

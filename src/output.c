@@ -1,6 +1,5 @@
 #include "utilities.h"
 
-// Helper method
 
 
 void refreshScreen(){
@@ -76,23 +75,46 @@ void drawRows(struct string *ab){
         //snprintf(number, sizeof(number), "\e[38;5;238m%02d│ \e[0m",i);
         //stringAppend(ab,number,strlen(number));
         if (i>=e.rowsNum){
-            if (e.rowBuff == NULL && i == e.windowsLength/3 ) {
-                char welcome[80];
-                 
-                int welcomelen = snprintf(welcome, sizeof(welcome),
-                        "Welcome to my text editor !");
-                if (welcomelen > e.windowsWidth) welcomelen = e.windowsWidth;
-                int padding = (e.windowsWidth-welcomelen)/2;
-                stringAppend(ab, "⮚" , 4);
-                if (padding)padding --;
-                while(padding){
-                    stringAppend(ab, " " , 1);
-                    padding--;
-                }
-                
-                stringAppend(ab, welcome, welcomelen);
-                
-            } 
+            if (e.rowBuff == NULL ) {
+                    char* editorName [] ={ 
+                            "rrrrr   rrrrrrrrr   aaaaaaaaaaaaawwwwwww           wwwww           wwwwwww eeeeeeeeeeee",    
+                            "r::::rrr:::::::::r  a::::::::::::aw:::::w         w:::::w         w:::::wee::::::::::::ee ", 
+                            "r:::::::::::::::::r aaaaaaaaa:::::aw:::::w       w:::::::w       w:::::we::::::eeeee:::::ee",
+                            "rr::::::rrrrr::::::r         a::::a w:::::w     w:::::::::w     w:::::we::::::e     e:::::e",
+                            " r:::::r     r:::::r  aaaaaaa:::::a  w:::::w   w:::::w:::::w   w:::::w e:::::::eeeee::::::e",
+                            " r:::::r     rrrrrrraa::::::::::::a   w:::::w w:::::w w:::::w w:::::w  e:::::::::::::::::e ",
+                            " r:::::r           a::::aaaa::::::a    w:::::w:::::w   w:::::w:::::w   e::::::eeeeeeeeeee  ",
+                            " r:::::r          a::::a    a:::::a     w:::::::::w     w:::::::::w    e:::::::e           ",
+                            " r:::::r          a::::a    a:::::a      w:::::::w       w:::::::w     e::::::::e          ",
+                            " r:::::r          a:::::aaaa::::::a       w:::::w         w:::::w       e::::::::eeeeeeee  ",
+                            " r:::::r           a::::::::::aa:::a       w:::w           w:::w         ee:::::::::::::e  ",
+                            " rrrrrrr            aaaaaaaaaa  aaaa        www             www            eeeeeeeeeeeeee  "
+                        };
+                    int nameLen = 12;
+                    int nameWidth = strlen(editorName[2]);
+                    int startIdx = (e.windowsLength - nameLen)/2 > 0 ? (e.windowsLength - nameLen)/2 : 0;
+
+                    if ( i >= startIdx + nameLen || i < startIdx){
+                        stringAppend(ab,"⮚",4);
+                    }
+                    else if (i >= startIdx ){
+                        int x = i-startIdx; 
+                        
+                        int horizontalPadding = (e.windowsWidth-1-nameWidth)/2 > 0 ? (e.windowsWidth-1-nameWidth)/2 : 0; 
+                        int idx = (horizontalPadding - e.coloff) > 0 ? horizontalPadding - e.coloff : 0;
+                        stringAppend(ab, "⮚", 4);
+                        while ( idx > 0){
+                            stringAppend(ab, " ", 1);
+                            idx--;
+                        }
+
+                        int lineStart = e.coloff - horizontalPadding > 0 ? e.coloff - horizontalPadding: 0;
+                        if (lineStart < strlen(editorName[x])){ 
+                            int len = strlen(editorName[x]) - lineStart >= e.windowsWidth-1 ? e.windowsWidth-1 : strlen(editorName[x]) - lineStart; 
+                            stringAppend(ab, &editorName[x][lineStart], len);
+                        }
+                    }
+            }
             else {
               stringAppend(ab, "⮚", 4);
             }
@@ -127,4 +149,11 @@ void freeMessage(){
     free(e.message.b);
     e.message.b = NULL;
     e.message.len = 0;
+}
+
+void drawEditorName(struct string *ab){
+
+
+    
+     
 }

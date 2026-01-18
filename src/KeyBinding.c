@@ -94,6 +94,7 @@ void tab(){
     }
 }
 void dollarSign(){
+    if (e.rowBuff == NULL) return;
     int len= e.rowBuff[e.cy+e.rowoff].len ;
     if(len > e.windowsWidth) {
         e.coloff = len - e.windowsLength;
@@ -115,6 +116,7 @@ int nextSpace(char* string , int at){
     return --i;
 }
 void gotoNextWord(){
+    if (e.rowBuff == NULL) return; 
     int at = e.cx+e.coloff;
     int nextWord = nextSpace(e.rowBuff[e.cy+e.rowoff].b, at);
     if (nextWord == -1){
@@ -151,7 +153,7 @@ int prevSpace(char* string , int at){
     return 0;
 }
 void gotoPrevWord(){
-
+    if (e.rowBuff == NULL) return;
     int prevWord = prevSpace(e.rowBuff[e.cy+e.rowoff].b , e.cx+e.coloff);
     if (prevWord == -1){
         if (e.cy) e.cy--;

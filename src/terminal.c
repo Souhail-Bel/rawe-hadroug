@@ -1,13 +1,11 @@
 #include "utilities.h"
-#include <stdio.h>
-#include <unistd.h>
 
 #define QUIT_ATTEMPTS 2 
 
 
 int getWindowSize(int *rows, int *cols){
     struct winsize ws;
-    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
+    if (ioctl(STDIN_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
         return -1;
     } 
     else {
