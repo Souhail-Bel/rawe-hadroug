@@ -4,7 +4,7 @@
 
 
 /// Includes ///
-
+#include <math.h>
 #include <sys/wait.h>
 #include <termios.h>
 #include <ctype.h>
@@ -28,7 +28,8 @@ struct editorConfig {
     int cx,cy;
     int windowsLength;
     int windowsWidth;
-    
+    int startingX;
+
     int rowoff;
     int coloff;
 
@@ -112,4 +113,6 @@ void dollarSign();
 void tab();
 void gotoPrevWord();
 void gotoNextWord();
+void moveLineUp();
+void moveLineDown();
 #endif

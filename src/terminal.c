@@ -19,6 +19,7 @@ void initEditorConfig(){
     e.cy=0;
     e.rowoff=0;
     e.coloff=0;
+    e.startingX = 5;
 
     e.rowsNum=0;
     e.rowBuff = NULL;
@@ -127,6 +128,24 @@ void handleKeys(){
 
                                 }
                             }
+                            else if (seq[2] == ';' && seq[3] == '3'){
+                                 switch (seq[4]){
+                                    case LEFT_ARROW :
+                                        break;
+                                    case RIGHT_ARROW :
+                                        break;
+                                    case UP_ARROW :
+                                        moveLineUp();
+                                        break;
+                                    case DOWN_ARROW :
+                                        moveLineDown();
+                                        break;
+                                    default :
+                                        tcflush(STDIN_FILENO, TCIFLUSH);                                   
+
+                                }
+
+                            }
                             break;
                         default : 
                             tcflush(STDIN_FILENO, TCIFLUSH);
@@ -183,7 +202,9 @@ void enableRawMode(){
     if (tcsetattr(STDIN_FILENO,TCSAFLUSH,&raw) == -1) die("tcsetattr");
 }
 struct string editorPrompt(char* prompt){
-    e.cx = strlen(prompt);
+    int prevStartingX = e.startingX;
+    e.startingX = 0;
+    e.cx = strlen(prompt) ;
     e.cy = e.windowsLength+1;
 
     struct string returnInfo;
@@ -204,6 +225,7 @@ struct string editorPrompt(char* prompt){
                 e.cx= 0;
                 e.cy =0;
                 stringFree(&command);
+                e.startingX = prevStartingX;
                 return returnInfo;
             case ESCAPE :{
                 char seq[2] = {'\0','\0'} ;
@@ -230,6 +252,7 @@ struct string editorPrompt(char* prompt){
                 e.cx = 0;
                 e.cy = 0;
                 stringFree(&command);
+                e.startingX = prevStartingX;
                 return returnInfo;
             case BACKSPACE1:
             case BACKSPACE2:
@@ -248,4 +271,5 @@ struct string editorPrompt(char* prompt){
             }
         }
     }
+    e.startingX = prevStartingX;
 }

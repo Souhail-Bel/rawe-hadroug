@@ -25,13 +25,13 @@ void moveCursorToIndex(int idx){
 }
 void upArrow(){
     int row = e.cy+e.rowoff;
-    if(row > 0 && row -1 < e.rowsNum && e.cx+e.coloff >= e.rowBuff[row].len-1) 
+    if(row > 0 && row -1 < e.rowsNum && e.cx+e.coloff >= e.rowBuff[row].len) 
         moveCursorToIndex(e.rowBuff[row-1].len); 
     if (e.cy) e.cy--; 
     else if(e.rowoff) e.rowoff--;
 }
 void downArrow(){
-    if(e.cy+e.rowoff+1 < e.rowsNum  && e.cx+e.coloff >= e.rowBuff[e.cy+e.rowoff].len-1) 
+    if(e.cy+e.rowoff+1 < e.rowsNum  && e.cx+e.coloff >= e.rowBuff[e.cy+e.rowoff].len) 
         moveCursorToIndex(e.rowBuff[e.cy+e.rowoff+1].len);
 
     if(e.cy != e.windowsLength -1)  e.cy++;
@@ -39,12 +39,13 @@ void downArrow(){
 }
 void rightArrow(){
     if(e.cy+e.rowoff<e.rowsNum  && e.cx + e.coloff== e.rowBuff[e.cy+e.rowoff].len) {
-        if (e.cy != e.windowsLength -1) e.cy++;
-        else e.rowoff++;
-        e.cx=0;
-        e.coloff=0;
+        //if (e.cc != e.windowsLength -1) e.cy++;
+        //else e.rowoff++;
+        //e.cx=0;
+        //e.coloff=0;
     }
-    else if(e.cx != e.windowsWidth -1) e.cx++;
+    else
+    if(e.cx != e.windowsWidth -1) e.cx++;
     else e.coloff++;
 }
 void leftArrow(){
@@ -52,9 +53,9 @@ void leftArrow(){
     else {
         if (e.coloff) e.coloff--;
         else if(e.cy+e.rowoff < e.rowsNum && e.cy+e.rowoff != 0){
-                if (e.cy) e.cy--;
-                else e.rowoff--;
-                dollarSign(); 
+                //if (e.cy) e.cy--;
+                //else e.rowoff--;
+                //dollarSign(); 
         }
     }
 }
@@ -167,4 +168,28 @@ void gotoPrevWord(){
     else
         moveCursorToIndex(prevWord);
 
+}
+int moveLine(int x){
+    int currentY = e.cy+e.rowoff;
+    if (x != -1 && x != 1) return -1;
+    if (x == -1 && currentY == 0) return -1;
+    if (x == 1 && currentY == e.rowsNum-1) return -1 ;
+    struct string temp = e.rowBuff[currentY];
+
+    memcpy(e.rowBuff+currentY , e.rowBuff+currentY+x , sizeof(struct string));
+    memcpy(e.rowBuff+currentY+x , &temp , sizeof(struct string));
+    return 1;
+}
+void moveLineDown(){
+    if (moveLine(1) == 1){
+        if (e.cy != e.windowsLength-1) e.cy++;
+        else e.rowoff ++;
+    }
+
+}
+void moveLineUp(){
+    if(moveLine(-1) == 1){
+        if (e.cy) e.cy--;
+        else e.rowoff --;
+    }
 }

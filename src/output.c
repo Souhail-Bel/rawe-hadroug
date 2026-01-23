@@ -1,5 +1,6 @@
 #include "utilities.h"
-
+#include <math.h>
+#include <stdio.h>
 
 
 void refreshScreen(){
@@ -26,7 +27,7 @@ void refreshScreen(){
     if (e.message.len > e.windowsWidth) e.windowsLength--;
 
     char ch[100];
-    snprintf(ch,sizeof(ch), "\x1b[%d;%dH",(e.cy)+1 ,(e.cx)+1);
+    snprintf(ch,sizeof(ch), "\x1b[%d;%dH",(e.cy)+1 ,(e.cx)+1+e.startingX);
     stringAppend(&ab, ch ,strlen(ch));
     
     write(STDOUT_FILENO ,ab.b,ab.len);
@@ -70,10 +71,15 @@ void drawStatusLine(struct string *ab){
 
 void drawRows(struct string *ab){
     for (int y =0;y<e.windowsLength;y++){
+
         int i= y+e.rowoff;
-        //char number[32] ;
-        //snprintf(number, sizeof(number), "\e[38;5;238m%02d│ \e[0m",i);
-        //stringAppend(ab,number,strlen(number));
+        char number[32] ;
+        char padding[10];
+        int len = snprintf(padding, sizeof(padding),"%d", i);
+        
+        int paddingLen = e.startingX - len;
+        snprintf(number, sizeof(number), "\e[38;5;23m%02d\e[0m",i);
+        stringAppend(ab,number,strlen(number));
         if (i>=e.rowsNum){
             if (e.rowBuff == NULL ) {
                     char* editorName [] ={ 
@@ -90,11 +96,11 @@ void drawRows(struct string *ab){
                             " r:::::r           a::::::::::aa:::a       w:::w           w:::w         ee:::::::::::::e  ",
                             " rrrrrrr            aaaaaaaaaa  aaaa        www             www            eeeeeeeeeeeeee  "
                         };
-                    int nameLen = 12;
+                    int nameHeight = 12;
                     int nameWidth = strlen(editorName[2]);
-                    int startIdx = (e.windowsLength - nameLen)/2 > 0 ? (e.windowsLength - nameLen)/2 : 0;
+                    int startIdx = (e.windowsLength - nameHeight)/2 > 0 ? (e.windowsLength - nameHeight)/2 : 0;
 
-                    if ( i >= startIdx + nameLen || i < startIdx){
+                    if ( i >= startIdx + nameHeight || i < startIdx){
                         stringAppend(ab,"⮚",4);
                     }
                     else if (i >= startIdx ){
@@ -151,9 +157,3 @@ void freeMessage(){
     e.message.len = 0;
 }
 
-void drawEditorName(struct string *ab){
-
-
-    
-     
-}
