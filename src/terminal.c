@@ -35,11 +35,14 @@ void initEditorConfig(){
     e.filename = NULL;
     e.filePath = NULL;
   
+    initString(&e.startOfLineChar);
+    stringAppend(&e.startOfLineChar, "\e[38;5;25m", 10);
+    stringAppend(&e.startOfLineChar, "🟆" , 4);
+    stringAppend(&e.startOfLineChar , "\e[0m" , 4);
+
     e.quit_attempts = 0;
 
     initString(&e.message);
-    char message[]= "This text editor does not support UTF-8! UTF-8 characters may look broken !";
-    writeMessage(&e.message, message,strlen(message));
     e.messageWait = 5;
 }
 void handleKeys(){
@@ -70,7 +73,7 @@ void handleKeys(){
                 struct string newFile = editorPrompt("save as ");
                 
                 if (newFile.b == NULL){
-                    stringFree(&e.message);
+                    clearString(&e.message);
                     break;
                 }
                 
@@ -197,6 +200,8 @@ void exiting(){
         }
         free(e.rowBuff);
     }
+    if (e.startOfLineChar.b != NULL)
+        stringFree(&e.startOfLineChar);
     if (e.filename != NULL)
         free(e.filename);
     if (e.filePath != NULL)
@@ -221,10 +226,17 @@ void enableRawMode(){
     raw.c_cc[VTIME]=1;
     if (tcsetattr(STDIN_FILENO,TCSAFLUSH,&raw) == -1) die("tcsetattr");
 }
+void resetAtExit(struct string* command , int prevStartingX){
+        e.cx= 0;
+        e.cy =0;
+        stringFree(command);
+        e.startingX = prevStartingX;
+}
 struct string editorPrompt(char* prompt){
+    int promptLen = strlen(prompt);
     int prevStartingX = e.startingX;
     e.startingX = 0;
-    e.cx = strlen(prompt) ;
+    e.cx = promptLen ;
     e.cy = e.windowsLength+1;
 
     struct string returnInfo;
@@ -232,7 +244,7 @@ struct string editorPrompt(char* prompt){
     
     struct string command;
     initString(&command);
-    stringAppend(&command, prompt ,strlen(prompt));
+    stringAppend(&command, prompt ,promptLen);
 
     while(1){
         writeMessage(&e.message, command.b, command.lenByte);
@@ -242,10 +254,8 @@ struct string editorPrompt(char* prompt){
         if (readStatus == 0) continue;
         switch (c){
             case ENTER :
-                e.cx= 0;
-                e.cy =0;
-                stringFree(&command);
-                e.startingX = prevStartingX;
+                stringAppend(&returnInfo, command.b, command.lenByte);
+                resetAtExit(&command, prevStartingX);
                 return returnInfo;
             case ESCAPE :{
                 char seq[2] = {'\0','\0'} ;
@@ -266,30 +276,47 @@ struct string editorPrompt(char* prompt){
                 break;
             }
             case CTRL_KEY('c'):
-                free(returnInfo.b);
-                returnInfo.b = NULL;
-                returnInfo.len = 0;
-                e.cx = 0;
-                e.cy = 0;
-                stringFree(&command);
-                e.startingX = prevStartingX;
+                stringFree(&returnInfo);
+                resetAtExit(&command, prevStartingX);
                 return returnInfo;
             case BACKSPACE1:
             case BACKSPACE2:
-                if(e.cx != strlen(prompt)){
-                    removeCharInRow(&returnInfo, e.cx-strlen(prompt) , 1);
-                    removeCharInRow(&command, e.cx , 1);
+                if(e.cx != promptLen ){
+                    int posInBytes = getPosInBytes(e.cx, command.b , command.lenByte);
+                    int charLen = utf8_len(command.b[getPosInBytes(e.cx - 1 , command.b , command.lenByte)]);
+                    removeCharInRow(&command,
+                            posInBytes, 
+                            charLen
+                            );
                     e.cx--;
                 }
                 break;
             default:{
                 if (!iscntrl(c) && e.cx != e.windowsWidth-1){
-                        insertCharInRow(&command,e.cx,&c,1);
-                        insertCharInRow(&returnInfo ,e.cx-strlen(prompt), &c,1);
+                        char buf[4];
+                        buf[0] = c;
+                        int len = utf8_len(buf[0]);
+                        if (len == -1){
+                            resetAtExit(&command, prevStartingX);
+                            clearString(&returnInfo);
+                            stringAppend(&returnInfo , "Error !" , 7);
+                            return returnInfo;
+                        }
+                            
+
+                        for (int i = 1; i < len; i++) {
+                            if (read(STDIN_FILENO, &buf[i], 1) != 1){
+                                resetAtExit(&command, prevStartingX);
+                                clearString(&returnInfo);
+                                stringAppend(&returnInfo , "Error !" , 7);
+                                return returnInfo;
+                            }
+                        }
+                        int posInBytes = getPosInBytes(e.cx, command.b, command.lenByte);
+                        insertCharInRow(&command,posInBytes,buf,len);
                         e.cx++;
                 }
             }
         }
     }
-    e.startingX = prevStartingX;
 }

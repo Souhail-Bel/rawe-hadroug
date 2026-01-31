@@ -19,7 +19,7 @@ void refreshScreen(){
     time_t current_time;
     time(&current_time);
     if ((int)current_time - e.messageTime >= e.messageWait ) 
-        stringFree(&e.message);
+        clearString(&e.message);
 
     if (e.message.len) drawMessage(&ab,e.message);
     if (e.message.len > e.windowsWidth) e.windowsLength--;
@@ -99,14 +99,14 @@ void drawRows(struct string *ab){
                     int startIdx = (e.windowsLength - nameHeight)/2 > 0 ? (e.windowsLength - nameHeight)/2 : 0;
 
                     if ( i >= startIdx + nameHeight || i < startIdx){
-                        stringAppend(ab,"🟆",4);
+                        stringAppend(ab , e.startOfLineChar.b,e.startOfLineChar.lenByte);
                     }
                     else if (i >= startIdx ){
                         int x = i-startIdx; 
                         
                         int horizontalPadding = (e.windowsWidth-1-nameWidth)/2 > 0 ? (e.windowsWidth-1-nameWidth)/2 : 0; 
                         int idx = (horizontalPadding - e.coloff) > 0 ? horizontalPadding - e.coloff : 0;
-                        stringAppend(ab, "🟆", 4);
+                        stringAppend(ab , e.startOfLineChar.b,e.startOfLineChar.lenByte);
                         while ( idx > 0){
                             stringAppend(ab, " ", 1);
                             idx--;
@@ -120,7 +120,7 @@ void drawRows(struct string *ab){
                     }
             }
             else {
-              stringAppend(ab, "🟆", 4);
+                stringAppend(ab , e.startOfLineChar.b,e.startOfLineChar.lenByte);
             }
         }
         else {
@@ -141,8 +141,7 @@ void drawMessage(struct string *ab, struct string message){
     stringAppend(ab, reset, strlen(reset));
 }
 void writeMessage(struct string *destination , char* message , int len){
-    if (destination->b == NULL) destination->b = malloc(len+1);
-    else destination->b = realloc (destination->b,len+1);
+    destination->b = realloc (destination->b,len+1);
     memcpy(destination->b ,message , len+1);
     destination->lenByte = len;
     destination->len = getPos(len , message );

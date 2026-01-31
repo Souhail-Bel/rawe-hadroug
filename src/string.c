@@ -6,6 +6,11 @@ void initString(struct string *ab){
     ab->len = 0;
     ab->b[0]='\0';
 }
+void clearString(struct string *ab){
+    ab->lenByte = 0;
+    ab->len = 0;
+    ab->b[0]='\0';
+}
 void stringAppend(struct string *ab , const char* c , int lenByte){
     ab->b = realloc(ab->b, ab->lenByte + lenByte + 1);
     int pos = getPos(lenByte , (char*)c );

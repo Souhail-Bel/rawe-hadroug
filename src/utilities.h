@@ -44,6 +44,8 @@ struct editorConfig {
 
     struct string *rowBuff;
     int rowsNum;
+    
+    struct string startOfLineChar;
 
     struct string message;
     int messageTime ;
@@ -92,12 +94,13 @@ void readFile(char* file);
 
 /// buffer append ///
 void initString(struct string *ab);
+void clearString(struct string *ab);
 void stringAppend(struct string *ab , const char* c , int len);
 void stringFree(struct string *ab);
 
 /// editing ////
 int getPos(int at , char* input );
-int getBytePos(int at , char* input , int len);
+int getPosInBytes(int at , char* input , int len);
 void insertCharInRow(struct string* ab ,int at ,char* input , int inputLength);
 void insertChar(char* input , int inputLength);
 void removeCharInRow(struct string* ab,int at , int len);
