@@ -20,13 +20,7 @@ A simple text editor for opening and editing files.
 
 ### Character Encoding
 
-**UTF-8 is not supported.** Files containing UTF-8 encoded characters may display incorrectly or appear broken. This includes:
-
-- Accented characters (é, ñ, ü, etc.)
-- Non-Latin scripts (Chinese, Arabic, Cyrillic, etc.)
-- Special symbols and emoji
-
-For best results, use files with ASCII-only characters.
+**UTF-8 is supported.** Best results are with ASCII-only characters.
 
 ## Usage
 
@@ -39,4 +33,4 @@ For best results, use files with ASCII-only characters.
 ## Notes
 
 - Unsaved changes will trigger a confirmation prompt when attempting to quit
-- The editor works best with plain text files using standard ASCII encoding
+- The editor works best with plain text files using standard ASCII encoding, but UTF-8 is supported.
